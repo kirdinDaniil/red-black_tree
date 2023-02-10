@@ -64,17 +64,20 @@ binTree *next(binTree *root, int value){
 binTree *fixInsert(binTree *node, binTree *root) {
     if(root->left == nullptr && root->right == nullptr) {
         node->color = black;
-        return root;
+        return root; //выставление цвета для корня дерева
     }
     while(node->parent->color == red) {
         if(node->parent->parent->left == node->parent) {
             if(node->parent->parent->right && node->parent->parent->right->color == red) {
-                node->parent->color = black;
-                node->parent->parent->right->color = black;
-                node->parent->parent->color = red;
+                //если дядя есть и он красный
+                node->parent->color = black;//меняем цвет отца
+                node->parent->parent->right->color = black;//так же меняем цвет дяди
+                node->parent->parent->color = red;//меняем цвет деда
             }else {
                 if(node->parent->right == node) {
                     node = node->parent;
+                    //меняем местами красные и черные элементы(отца и ребенка)
+                    // для сохранения черной высоты
                     rotateLeft(node);
                 }
                 node->parent->color = black;
@@ -111,20 +114,20 @@ binTree *insert(binTree *root, int value) {
     } else {
         binTree *tmp = root;
         binTree *parent = nullptr;
-        while (tmp != nullptr) {
+        while (tmp != nullptr) {//проход по дереву с поиском нужной позиции
             parent = tmp;
             if (tmp->data < newNode->data)
                 tmp = tmp->right;
             else
                 tmp = tmp->left;
         }
-        newNode->parent = parent;
+        newNode->parent = parent;//найдя нужную позицию прикрепляем новую ноду
         if(parent->data < newNode->data)
             parent->right = newNode;
         else
             parent->left = newNode;
     }
-    fixInsert(newNode,root);
+    fixInsert(newNode,root);//запускается функция балансировки дерева
     return root;
 }
 
